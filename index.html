@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="./assets/css/style.css" />
+    <title>Weather Dashboard</title>
+</head>
+
+<body>
+    <div>
+        <nav class="navbar navbar-dark bg-dark text-light">
+            <h1>Weather Dashboard</h1>
+    </nav>
+    </div>
+    <!-- search input field-->
+    <main>
+        <div class="sidebar">
+            <h4>Search for a City:</h4>
+                <form class="form-inline" id="city-search">
+                    <label class="city-search-label" id="city-search-label" for="city-search-input">City</label>
+                    <input class="form-control mr-sm-2" type="text" id="city-search-input">
+                    <button class="btn btn-outline-info my-2 my-sm-0" type="submit" id="search-btn">Search
+                    </button>
+                </form>
+                <!-- search history-->
+            <ul class="search-history" id="city-history"></ul>    
+        </div>
+
+    <!-- current weather-->
+        <div class="city-info" id="current-forecast">
+            <h2 id="city-date"></h2>
+            <img id="weather-icon" />
+            <p id="current-temp"></p>
+            <p id="current-humidity"></p>
+            <p id="current-wind"></p>
+            <div class="current-uv">
+                <p id="current-uv-number"></p>
+                <span id="current-uv-span"></span>
+            </div>    
+
+        </div>
+    <!-- 5 day weather forecast-->
+        <div class="week-forcast">
+            <h2 id="week-forecast-h2">
+
+        </div>
+    </main>
+<script src="./assets/js/script.js"></script>
+</body>
+</html>
