@@ -1,0 +1,13 @@
+.navbar {
+    display: flex;
+    justify-content: space-around;
+}
+
+#week-forecast{
+    background-color: #14213D;
+    border-radius: 10%;
+    width: 20%;
+    padding: 70px;
+    color: whitesmoke;
+    align-content: center;
+}
