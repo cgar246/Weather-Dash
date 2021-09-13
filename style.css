@@ -1,13 +1,29 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
 .navbar {
     display: flex;
     justify-content: space-around;
 }
 
 #week-forecast{
-    background-color: #14213D;
-    border-radius: 10%;
-    width: 20%;
-    padding: 70px;
-    color: whitesmoke;
-    align-content: center;
+    color: #000000;
+    padding: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    border: solid 1px black;
+    height: 45%;
+    padding: 0.5rem;
+    align-content: space-between;
+    height: 70%;
+    background-color: teal;
+    color: white;
+    justify-content: center;
 }
+
+#current-forecast {
+    text-align: center;
+}
+
