@@ -9,22 +9,21 @@ var weatherEl = document.querySelector('#weather-icon');
 var todaysTempEl = document.querySelector('#current-temp');
 var laHumedadEl = document.querySelector('#current-humidity');
 var elVientoEl = document.querySelector('#current-wind');
-var currentUvEl = document.querySelector('#current-uv-number')
-var currentUvSpan = document.querySelector('#current-uv-span');
+var currentSunEl = document.querySelector('#current-uv-number')
+var currentSpan = document.querySelector('#current-uv-span');
 var semanaTempEl = document.querySelector('#week-forecast');
-var weekForcastH2El = document.querySelector('#week-forecast-h2');
+var forecastweeklyEl = document.querySelector('#week-forecast-h2');
 
 http://api.openweathermap.org/data/2.5/forecast?id=524901&APPID={4f062d3d9ffc506ff6103fe8249b0a60}
 console.log(pongaLaCiudadEl);
 //const apiKey = 4f062d3d9ffc506ff6103fe8249b0a60;
-var formSubmitHandler = function(event) {
+var submittingInfo = function(event) {
     event.preventDefault();
     console.log(event);
     console.log(pongaLaCiudadEl);
     // get value from input element
     var ciudad = pongaLaCiudadEl.value.trim();
     console.log(ciudad);
-    //pongaLaCiudadEl.reset();
     if (ciudad) {
         agaraCiudad(ciudad); 
         pongaLaCiudadEl.value = "";
@@ -33,22 +32,21 @@ var formSubmitHandler = function(event) {
     }
 };
 
-var buttonClickHandler = function(event) {
+var cityChooseClick = function(event) {
     agaraCiudad(event.target.textContent);
 };
 
 var agaraCiudad = function(ciudad) {
 
-    var dayApiUrl = "https://api.openweathermap.org/geo/1.0/direct?q=" + ciudad + "&appid=" + "4f062d3d9ffc506ff6103fe8249b0a60";
+    var dayUrl = "https://api.openweathermap.org/geo/1.0/direct?q=" + ciudad + "&appid=" + "4f062d3d9ffc506ff6103fe8249b0a60";
     console.log(ciudad);
     if (ciudad) {
-        fetch(dayApiUrl)
+        fetch(dayUrl)
             .then(function(response) {
                 if (response.ok) {
                     response.json().then(function(data) {
                         console.log(data);
-                        //searchHistory(data.name);
-                        weatherInfo(data[0].name, data[0].lon, data[0].lat);
+                        weatherForecast(data[0].name, data[0].lon, data[0].lat);
                     });
                 } else {
                     alert("Error: " + response.statusText);
@@ -61,15 +59,13 @@ var agaraCiudad = function(ciudad) {
 };
 
 
-var weatherInfo = function(ciudad, lon, lat) {
-    console.log(ciudad, lon, lat)
-    var weatherApiUrl = "https://api.openweathermap.org/data/2.5/onecall?lat=" + lat + "&lon=" + lon + "&units=imperial&appid=" + apiKey;
-    fetch(weatherApiUrl)
+var weatherForecast = function(ciudad, lon, lat) {
+    var weatherUrl = "https://api.openweathermap.org/data/2.5/onecall?lat=" + lat + "&lon=" + lon + "&units=imperial&appid=" + apiKey;
+    fetch(weatherUrl)
         .then(function(response) {
             if (response.ok) {
                 response.json().then(function({current, daily}) {
-                    console.log(current, daily)
-                    displayCurrentWeather(ciudad, current, daily);
+                    displayingTodaysWeather(ciudad, current, daily);
                 });
             } else {
                 alert("Error: " + response.statusText);
@@ -85,92 +81,86 @@ function getIcon(iconCode) {
     return 'http://openweathermap.org/img/wn/' + iconCode + '@2x.png';
 }
 
-var displayCurrentWeather = function(ciudad, current, daily) {
-    //console.log(ciudad);
-    //console.log(lon);
-    //console.log(lat);
-    // current forecast
+var displayingTodaysWeather = function(ciudad, current, daily) {
     var date = new Date(current.dt * 1000);
     date = date.toLocaleDateString("en-us")
-    var dayWeather = current.weather[0].description;
-    var dayWeatherIcon= getIcon(current.weather[0].icon);
+    var weatherDaily = current.weather[0].description;
+    var iconincWeather= getIcon(current.weather[0].icon);
     var dayTemp = current.temp + String.fromCharCode(176) + "F";
-    var dayHumidity = current.humidity + "%";
-    var dayWind = current.wind_speed + " MPH";
-    var dayUv = current.uvi;
+    var humidifydaily = current.humidity + "%";
+    var windyDay = current.wind_speed + " MPH";
+    var sunRays = current.uvi;
 
     elDiaDeSemanaEl.textContent = ciudad + date;
-    weatherEl.setAttribute("src", dayWeatherIcon);
-    weatherEl.setAttribute("alt", `Forcast is ${dayWeather}`);
+    weatherEl.setAttribute("src", iconincWeather);
+    weatherEl.setAttribute("alt", `Forcast is ${weatherDaily}`);
     todaysTempEl.textContent = "Temperature: " + dayTemp;
-    laHumedadEl.textContent = "Humidity: " + dayHumidity;
-    elVientoEl.textContent = "Wind: " + dayWind;
-    currentUvEl.textContent = "UV:";
-    currentUvSpan.textContent = dayUv;
+    laHumedadEl.textContent = "Humidity: " + humidifydaily;
+    elVientoEl.textContent = "Wind: " + windyDay;
+    currentSunEl.textContent = "UV:";
+    currentSpan.textContent = sunRays;
 
     // week forecast
-    weekForcastH2El.textContent = "5 day forecast";
-    console.log(daily)
-    console.log(semanaTempEl)
+    forecastweeklyEl.textContent = "5 day forecast";
     for (i = 0; i < 5; i++) {
 
-    var weekForecastDivEl = document.createElement("div");
-        weekForecastDivEl.classList.add("future-forecast");
+    var divEl = document.createElement("div");
+        divEl.classList.add("future-forecast");
         console.log(daily[i].dt)
-        var weekDate = new Date(daily[i].dt * 1000);
-        weekDate = weekDate.toLocaleDateString("en-us")
-        console.log(weekDate)
+        var dateOfTheWeek = new Date(daily[i].dt * 1000);
+        dateOfTheWeek = dateOfTheWeek.toLocaleDateString("en-us")
+        console.log(dateOfTheWeek)
         var weekWeather = daily[i].weather[0].description;
         var weekWeatherIcon = getIcon(daily[i].weather[0].icon);
         var weekTemp = daily[i].temp.day + String.fromCharCode(176) + "F";
         var weekHumidity = daily[i].humidity + "%";
 
         var weekEl = document.createElement("h3");
-            weekEl.textContent = weekDate;
-            weekForecastDivEl.appendChild(weekEl);
+            weekEl.textContent = dateOfTheWeek;
+            divEl.appendChild(weekEl);
 
         var weekForecastImageEl = document.createElement("img");
             weekForecastImageEl.setAttribute("src", weekWeatherIcon);
             weekForecastImageEl.setAttribute("alt", `Forecast is ${weekWeather}`);
-            weekForecastDivEl.appendChild(weekForecastImageEl);
+            divEl.appendChild(weekForecastImageEl);
 
         var weekTempEl = document.createElement("p");
             weekTempEl.textContent = "Temp: " + weekTemp;
-            weekForecastDivEl.appendChild(weekTempEl);
+            divEl.appendChild(weekTempEl);
 
         var weekHumEl = document.createElement("p");
             weekHumEl.textContent = "Humidity: " + weekHumidity;
-            weekForecastDivEl.appendChild(weekHumEl);
+            divEl.appendChild(weekHumEl);
 
-            semanaTempEl.appendChild(weekForecastDivEl);
+            semanaTempEl.appendChild(divEl);
     }
 };
 
 // when a city is searched, save in localStorage
-function saveSearchHistory(ciudad) {
-        var searchHistory = JSON.parse(localStorage.getItem("searchHistory")) || [];
-        searchHistory.push(ciudad);
-        searchHistory = searchHistory.filter(function(value, index, array) {
+function searchesSaved(ciudad) {
+        var history = JSON.parse(localStorage.getItem("history")) || [];
+        history.push(ciudad);
+        history = history.filter(function(value, index, array) {
             return array.indexOf(value) === index
     });
-        if (searchHistory.length > 10) {
-            searchHistory = searchHistory.slice(1, 11);
+        if (history.length > 10) {
+            history = history.slice(1, 11);
     }
-    localStorage.setItem("searchHistory", JSON.stringify(searchHistory));
-    loadSearchHistory();
+    localStorage.setItem("history", JSON.stringify(history));
+    loadingNow();
 }
 
 // when page is loaded or new city is added to searchHistory,
-function loadSearchHistory() {
-    var searchHistory = JSON.parse(localStorage.getItem("searchHistory")) || [];
+function loadingNow() {
+    var history = JSON.parse(localStorage.getItem("history")) || [];
     searchHistoryListEl.innerHTML = "";
 
-    for (let i = 0; i < searchHistory.length; i++) {
+    for (let i = 0; i < history.length; i++) {
         var searchHistoryListItemEl = document.createElement("li");
-        searchHistoryListItemEl.textContent = searchHistory[i];
+        searchHistoryListItemEl.textContent = history[i];
 
         searchHistoryListEl.prepend(searchHistoryListItemEl);
     }
 }
 
-formEl.addEventListener("submit", formSubmitHandler);
+formEl.addEventListener("submit", submittingInfo);
